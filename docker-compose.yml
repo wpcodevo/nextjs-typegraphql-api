@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  mongo:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - '6000:27017'
+    volumes:
+      - mongodb:/data/db
+    env_file:
+      - ./.env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis:/data
+volumes:
+  redis:
+  mongodb:
