@@ -10,6 +10,7 @@ import { disconnectDB } from '../utils/connectDB';
 import redisClient from '../utils/connectRedis';
 import { signJwt, verifyJwt } from '../utils/jwt';
 
+// Cookie Options
 const accessTokenExpiresIn = 15;
 const refreshTokenExpiresIn = 60;
 
@@ -38,6 +39,7 @@ async function findByEmail(email: string): Promise<User | null> {
   return UserModel.findOne({ email }).select('+password');
 }
 
+// Generate Tokens
 function signTokens(user: User) {
   const userId: string = user._id.toString();
   const access_token = signJwt({ userId }, 'accessTokenPrivateKey', {
@@ -56,6 +58,7 @@ function signTokens(user: User) {
 }
 
 export default class UserService {
+  // Sign up a new user
   async signUpUser(input: Partial<User>) {
     try {
       const user = await UserModel.create(input);
@@ -72,6 +75,7 @@ export default class UserService {
     }
   }
 
+  // Login a user
   async loginUser(input: LoginInput, { req, res }: Context) {
     try {
       const message = 'Invalid email or password';
@@ -118,6 +122,7 @@ export default class UserService {
     }
   }
 
+  // Get Authenticated User
   async getMe({ req, res, deserializeUser }: Context) {
     try {
       const user = await deserializeUser(req, res);
@@ -133,6 +138,7 @@ export default class UserService {
     }
   }
 
+  // Refresh Access Token
   async refreshAccessToken({ req, res }: Context) {
     try {
       // Get the refresh token
@@ -196,6 +202,7 @@ export default class UserService {
     }
   }
 
+  // Logout User
   async logoutUser({ req, res }: Context) {
     try {
       const user = await deserializeUser(req, res);
