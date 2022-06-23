@@ -33,7 +33,10 @@ export default class PostService {
 
       return {
         status: 'success',
-        post,
+        post: {
+          ...post,
+          id: post?._id,
+        },
       };
     } catch (error: any) {
       errorHandler(error);
