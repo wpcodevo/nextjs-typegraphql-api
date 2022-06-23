@@ -6,6 +6,7 @@ import PostModel from '../models/post.model';
 import { Context } from '../types/context';
 
 export default class PostService {
+  // Create a new post
   async createPost(input: Partial<PostInput>, { req, res }: Context) {
     try {
       const user = await deserializeUser(req, res);
@@ -24,6 +25,7 @@ export default class PostService {
     }
   }
 
+  // Get a single post
   async getPost(id: string, { req, res }: Context) {
     try {
       await deserializeUser(req, res);
@@ -43,6 +45,7 @@ export default class PostService {
     }
   }
 
+  // Update a post
   async updatePost(
     id: string,
     input: Partial<PostInput>,
@@ -73,6 +76,7 @@ export default class PostService {
     }
   }
 
+  // Get all posts
   async getPosts(input: PostFilter, { req, res }: Context) {
     try {
       const user = await deserializeUser(req, res);
@@ -98,6 +102,7 @@ export default class PostService {
     }
   }
 
+  // Delete a post
   async deletePost(id: string, { req, res }: Context) {
     try {
       await deserializeUser(req, res);
