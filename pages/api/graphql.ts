@@ -3,9 +3,9 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { ApolloServer } from 'apollo-server-micro';
 import { buildSchema } from 'type-graphql';
 import Cors from 'cors';
-import { resolvers } from '../../src/resolvers';
-import { connectDB } from '../../src/utils/connectDB';
-import deserializeUser from '../../src/middleware/deserializeUser';
+import { resolvers } from '../../server/resolvers';
+import { connectDB } from '../../server/utils/connectDB';
+import deserializeUser from '../../server/middleware/deserializeUser';
 
 const cors = Cors({
   methods: ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
