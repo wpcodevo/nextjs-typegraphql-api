@@ -10,7 +10,7 @@ import { disconnectDB } from '../utils/connectDB';
 import redisClient from '../utils/connectRedis';
 import { signJwt, verifyJwt } from '../utils/jwt';
 
-const accessTokenExpiresIn = 15;
+const accessTokenExpiresIn = 1;
 const refreshTokenExpiresIn = 60;
 
 const cookieOptions: OptionsType = {
@@ -24,14 +24,14 @@ if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
 
 const accessTokenCookieOptions = {
   ...cookieOptions,
-  maxAge: accessTokenExpiresIn * 60 * 1000,
   expires: new Date(Date.now() + accessTokenExpiresIn * 60 * 1000),
+  maxAge: accessTokenExpiresIn * 60,
 };
 
 const refreshTokenCookieOptions = {
   ...cookieOptions,
-  maxAge: refreshTokenExpiresIn * 60 * 1000,
   expires: new Date(Date.now() + refreshTokenExpiresIn * 60 * 1000),
+  maxAge: refreshTokenExpiresIn * 60,
 };
 
 async function findByEmail(email: string): Promise<User | null> {

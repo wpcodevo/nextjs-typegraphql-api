@@ -1,0 +1,15 @@
+query GetMe {
+  getMe {
+    status
+    user {
+      _id
+      id
+      email
+      name
+      role
+      photo
+      updatedAt
+      createdAt
+    }
+  }
+}

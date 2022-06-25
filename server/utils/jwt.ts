@@ -41,6 +41,7 @@ export const verifyJwt = <T>(
       algorithms: ['RS256'],
     }) as T;
   } catch (error) {
+    console.log(error);
     return null;
   }
 };
