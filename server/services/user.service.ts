@@ -24,13 +24,13 @@ if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
 
 const accessTokenCookieOptions = {
   ...cookieOptions,
-  maxAge: accessTokenExpiresIn * 60 * 1000,
+  maxAge: accessTokenExpiresIn * 60,
   expires: new Date(Date.now() + accessTokenExpiresIn * 60 * 1000),
 };
 
 const refreshTokenCookieOptions = {
   ...cookieOptions,
-  maxAge: refreshTokenExpiresIn * 60 * 1000,
+  maxAge: refreshTokenExpiresIn * 60,
   expires: new Date(Date.now() + refreshTokenExpiresIn * 60 * 1000),
 };
 
