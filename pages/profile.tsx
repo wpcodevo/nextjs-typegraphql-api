@@ -1,6 +1,6 @@
 import type { GetServerSideProps, NextPage } from 'next';
 import { dehydrate } from 'react-query';
-import { useStateContext } from '../client/context';
+import Header from '../client/components/Header';
 import { IUser } from '../client/context/types';
 import {
   GetMeDocument,
@@ -8,27 +8,28 @@ import {
   useGetMeQuery,
 } from '../client/generated/graphql';
 import { REFRESH_ACCESS_TOKEN } from '../client/middleware/AuthMiddleware';
+import {
+  axiosGetMe,
+  axiosRefreshAccessToken,
+} from '../client/requests/axiosClient';
 import graphqlRequestClient, {
   queryClient,
 } from '../client/requests/graphqlRequestClient';
+import useStore from '../client/store';
 
-type HomeProps = {};
+type ProfileProps = {};
 
-const Home: NextPage<HomeProps> = () => {
-  const stateContext = useStateContext();
+const ProfilePage: NextPage<ProfileProps> = ({}) => {
+  const store = useStore();
 
-  const user = stateContext.state.authUser;
-
+  const user = store.authUser;
   const query = useGetMeQuery<GetMeQuery, Error>(
     graphqlRequestClient,
     {},
     {
       retry: 1,
       onSuccess: (data) => {
-        stateContext.dispatch({
-          type: 'SET_USER',
-          payload: data.getMe.user as IUser,
-        });
+        store.setAuthUser(data.getMe.user as IUser);
       },
       onError(error: any) {
         error.response.errors.forEach(async (err: any) => {
@@ -46,32 +47,29 @@ const Home: NextPage<HomeProps> = () => {
   );
 
   return (
-    <section className='bg-ct-blue-600 min-h-screen pt-20'>
-      <div className='max-w-4xl mx-auto bg-ct-dark-100 rounded-md h-[20rem] flex justify-center items-center'>
-        <div>
-          <p className='text-5xl font-semibold'>Profile Page</p>
-          <div className='mt-8'>
-            <p className='mb-4'>ID: {user?.id}</p>
-            <p className='mb-4'>Name: {user?.name}</p>
-            <p className='mb-4'>Email: {user?.email}</p>
-            <p className='mb-4'>Role: {user?.role}</p>
+    <>
+      <Header />
+      <section className='bg-ct-blue-600 min-h-screen pt-20'>
+        <div className='max-w-4xl mx-auto bg-ct-dark-100 rounded-md h-[20rem] flex justify-center items-center'>
+          <div>
+            <p className='text-5xl font-semibold'>Profile Page</p>
+            <div className='mt-8'>
+              <p className='mb-4'>ID: {user?.id}</p>
+              <p className='mb-4'>Name: {user?.name}</p>
+              <p className='mb-4'>Email: {user?.email}</p>
+              <p className='mb-4'>Role: {user?.role}</p>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   if (req.cookies.access_token) {
-    await queryClient.prefetchQuery('getMe', () =>
-      graphqlRequestClient.request(
-        GetMeDocument,
-        {},
-        {
-          Authorization: `Bearer ${req.cookies.access_token}`,
-        }
-      )
+    await queryClient.prefetchQuery(['getMe', {}], () =>
+      axiosGetMe(GetMeDocument, req.cookies.access_token as string)
     );
   } else {
     return {
@@ -85,8 +83,10 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
+      requireAuth: true,
+      enableAuth: true,
     },
   };
 };
 
-export default Home;
+export default ProfilePage;

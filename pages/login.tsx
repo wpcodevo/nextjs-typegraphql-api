@@ -1,5 +1,4 @@
-import type { NextPage } from 'next';
-import { useStateContext } from '../client/context';
+import type { GetServerSideProps, NextPage } from 'next';
 import { IUser } from '../client/context/types';
 import { object, string, TypeOf } from 'zod';
 import { useEffect } from 'react';
@@ -16,6 +15,7 @@ import {
 import graphqlRequestClient from '../client/requests/graphqlRequestClient';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
+import useStore from '../client/store';
 
 const loginSchema = object({
   email: string()
@@ -31,7 +31,7 @@ export type LoginInput = TypeOf<typeof loginSchema>;
 
 const LoginPage: NextPage = () => {
   const router = useRouter();
-  const stateContext = useStateContext();
+  const store = useStore();
 
   const query = useGetMeQuery(
     graphqlRequestClient,
@@ -39,10 +39,7 @@ const LoginPage: NextPage = () => {
     {
       enabled: false,
       onSuccess: (data) => {
-        stateContext.dispatch({
-          type: 'SET_USER',
-          payload: data.getMe.user as IUser,
-        });
+        store.setAuthUser(data.getMe.user as IUser);
       },
     }
   );
@@ -126,6 +123,15 @@ const LoginPage: NextPage = () => {
       </div>
     </section>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  return {
+    props: {
+      requireAuth: false,
+      enableAuth: false,
+    },
+  };
 };
 
 export default LoginPage;

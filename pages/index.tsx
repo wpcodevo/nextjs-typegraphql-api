@@ -1,6 +1,15 @@
 import type { NextPage } from 'next';
 import Header from '../client/components/Header';
 
+export const getServerSideProps = async () => {
+  return {
+    props: {
+      requireAuth: false,
+      enableAuth: false,
+    },
+  };
+};
+
 const HomePage: NextPage = () => {
   return (
     <>

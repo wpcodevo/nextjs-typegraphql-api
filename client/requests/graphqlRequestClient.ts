@@ -11,9 +11,7 @@ const graphqlRequestClient = new GraphQLClient(GRAPHQL_ENDPOINT, {
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
+      staleTime: 5 * 1000,
     },
   },
 });

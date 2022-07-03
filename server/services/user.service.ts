@@ -10,7 +10,7 @@ import { disconnectDB } from '../utils/connectDB';
 import redisClient from '../utils/connectRedis';
 import { signJwt, verifyJwt } from '../utils/jwt';
 
-const accessTokenExpiresIn = 1;
+const accessTokenExpiresIn = 15;
 const refreshTokenExpiresIn = 60;
 
 const cookieOptions: OptionsType = {
@@ -62,7 +62,7 @@ export default class UserService {
       await disconnectDB();
       return {
         status: 'success',
-        user: user.toJSON(),
+        ...user.toJSON(),
       };
     } catch (error: any) {
       if (error.code === 11000) {

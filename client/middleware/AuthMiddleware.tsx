@@ -1,11 +1,11 @@
 import { useCookies } from 'react-cookie';
-import { useStateContext } from '../context';
 import FullScreenLoader from '../components/FullScreenLoader';
 import React from 'react';
 import { GetMeQuery, useGetMeQuery } from '../generated/graphql';
 import { IUser } from '../context/types';
 import { gql } from 'graphql-request';
 import graphqlRequestClient from '../requests/graphqlRequestClient';
+import useStore from '../store';
 
 export const REFRESH_ACCESS_TOKEN = gql`
   query {
@@ -22,7 +22,7 @@ type AuthMiddlewareProps = {
 
 const AuthMiddleware: React.FC<AuthMiddlewareProps> = ({ children }) => {
   const [cookies] = useCookies(['logged_in']);
-  const stateContext = useStateContext();
+  const store = useStore();
 
   const query = useGetMeQuery<GetMeQuery, Error>(
     graphqlRequestClient,
@@ -31,10 +31,7 @@ const AuthMiddleware: React.FC<AuthMiddlewareProps> = ({ children }) => {
       retry: 1,
       enabled: Boolean(cookies.logged_in),
       onSuccess: (data) => {
-        stateContext.dispatch({
-          type: 'SET_USER',
-          payload: data.getMe.user as IUser,
-        });
+        store.setAuthUser(data.getMe.user as IUser);
       },
       onError(error: any) {
         error.response.errors.forEach(async (err: any) => {

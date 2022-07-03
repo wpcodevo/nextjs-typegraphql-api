@@ -1,5 +1,7 @@
 import React, { useCallback } from 'react';
 import { Controller, useController, useFormContext } from 'react-hook-form';
+import useStore from '../store';
+import Spinner from './Spinner';
 
 type FileUpLoaderProps = {
   name: string;
@@ -10,6 +12,7 @@ const FileUpLoader: React.FC<FileUpLoaderProps> = ({ name }) => {
     formState: { errors },
   } = useFormContext();
   const { field } = useController({ name, control });
+  const store = useStore();
 
   const onFileDrop = useCallback(
     async (e: React.SyntheticEvent<EventTarget>) => {
@@ -20,6 +23,7 @@ const FileUpLoader: React.FC<FileUpLoaderProps> = ({ name }) => {
       formData.append('file', newFile[0]);
       formData.append('upload_preset', 'nextjs-typegraphql');
 
+      store.setUploadingImage(true);
       const data = await fetch(
         'https://api.cloudinary.com/v1_1/Codevo/image/upload',
         {
@@ -27,15 +31,22 @@ const FileUpLoader: React.FC<FileUpLoaderProps> = ({ name }) => {
           body: formData,
         }
       )
-        .then((res) => res.json())
-        .catch((err) => console.log(err));
+        .then((res) => {
+          store.setUploadingImage(false);
+
+          return res.json();
+        })
+        .catch((err) => {
+          store.setUploadingImage(false);
+          console.log(err);
+        });
 
       if (data.secure_url) {
         field.onChange(data.secure_url);
       }
     },
 
-    [field]
+    [field, store]
   );
 
   return (
@@ -45,18 +56,21 @@ const FileUpLoader: React.FC<FileUpLoaderProps> = ({ name }) => {
       control={control}
       render={({ field: { name, onBlur, ref } }) => (
         <>
-          <div className='mb-2'>
-            <span className='block mb-2'>Choose profile photo</span>
-            <input
-              className='block text-sm mb-2 text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100'
-              type='file'
-              name={name}
-              onBlur={onBlur}
-              ref={ref}
-              onChange={onFileDrop}
-              multiple={false}
-              accept='image/jpg, image/png, image/jpeg'
-            />
+          <div className='mb-2 flex justify-between items-center'>
+            <div>
+              <span className='block mb-2'>Choose profile photo</span>
+              <input
+                className='block text-sm mb-2 text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100'
+                type='file'
+                name={name}
+                onBlur={onBlur}
+                ref={ref}
+                onChange={onFileDrop}
+                multiple={false}
+                accept='image/jpg, image/png, image/jpeg'
+              />
+            </div>
+            <div>{true && <Spinner />}</div>
           </div>
           <p
             className={`text-red-500 text-xs italic mb-2 ${
