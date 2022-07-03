@@ -1,5 +1,4 @@
 import type { GetServerSideProps, NextPage } from 'next';
-import { IUser } from '../client/context/types';
 import { object, string, TypeOf } from 'zod';
 import { useEffect } from 'react';
 import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
@@ -16,6 +15,7 @@ import graphqlRequestClient from '../client/requests/graphqlRequestClient';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import useStore from '../client/store';
+import { IUser } from '../client/lib/types';
 
 const loginSchema = object({
   email: string()

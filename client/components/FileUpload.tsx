@@ -70,7 +70,9 @@ const FileUpLoader: React.FC<FileUpLoaderProps> = ({ name }) => {
                 accept='image/jpg, image/png, image/jpeg'
               />
             </div>
-            <div>{true && <Spinner />}</div>
+            <div>
+              {store.uploadingImage && <Spinner color='text-yellow-400' />}
+            </div>
           </div>
           <p
             className={`text-red-500 text-xs italic mb-2 ${

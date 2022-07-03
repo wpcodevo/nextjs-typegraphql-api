@@ -1,17 +1,14 @@
 import type { GetServerSideProps, NextPage } from 'next';
 import { dehydrate } from 'react-query';
 import Header from '../client/components/Header';
-import { IUser } from '../client/context/types';
 import {
   GetMeDocument,
   GetMeQuery,
   useGetMeQuery,
 } from '../client/generated/graphql';
+import { IUser } from '../client/lib/types';
 import { REFRESH_ACCESS_TOKEN } from '../client/middleware/AuthMiddleware';
-import {
-  axiosGetMe,
-  axiosRefreshAccessToken,
-} from '../client/requests/axiosClient';
+import { axiosGetMe } from '../client/requests/axiosClient';
 import graphqlRequestClient, {
   queryClient,
 } from '../client/requests/graphqlRequestClient';

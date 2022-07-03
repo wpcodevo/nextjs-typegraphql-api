@@ -62,7 +62,10 @@ export default class UserService {
       await disconnectDB();
       return {
         status: 'success',
-        ...user.toJSON(),
+        user: {
+          ...user.toJSON(),
+          id: user?._id,
+        },
       };
     } catch (error: any) {
       if (error.code === 11000) {

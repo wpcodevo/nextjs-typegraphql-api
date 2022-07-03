@@ -1,5 +1,5 @@
-import { IUser } from '../context/types';
 import create from 'zustand';
+import { IUser } from '../lib/types';
 
 type Store = {
   authUser: IUser | null;
