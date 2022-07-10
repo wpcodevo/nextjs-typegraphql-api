@@ -17,7 +17,7 @@ const FileUpLoader: React.FC<FileUpLoaderProps> = ({ name }) => {
   const onFileDrop = useCallback(
     async (e: React.SyntheticEvent<EventTarget>) => {
       const target = e.target as HTMLInputElement;
-      if (!target.files) return;
+      if (!target.files || target.files.length === 0) return;
       const newFile = Object.values(target.files).map((file: File) => file);
       const formData = new FormData();
       formData.append('file', newFile[0]);

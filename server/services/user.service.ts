@@ -141,6 +141,10 @@ export default class UserService {
       // Get the refresh token
       const { refresh_token } = req.cookies;
 
+      if (!refresh_token) {
+        throw new ForbiddenError('Could not refresh access token');
+      }
+
       // Validate the RefreshToken
       const decoded = verifyJwt<{ userId: string }>(
         refresh_token,

@@ -1,0 +1,22 @@
+query GetAllPosts($input: PostFilter!) {
+  getPosts(input: $input) {
+    status
+    results
+    posts {
+      id
+      _id
+      id
+      title
+      content
+      category
+      user {
+        email
+        name
+        photo
+      }
+      image
+      createdAt
+      updatedAt
+    }
+  }
+}

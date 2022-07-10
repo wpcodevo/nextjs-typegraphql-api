@@ -29,7 +29,7 @@ const FormInput: React.FC<FormInputProps> = ({
       />
       {errors[name] && (
         <span className='text-red-500 text-xs pt-1 block'>
-          {errors[name].message}
+          {errors[name]?.message as string}
         </span>
       )}
     </div>

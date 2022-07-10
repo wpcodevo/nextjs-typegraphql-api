@@ -2,10 +2,10 @@ import { useCookies } from 'react-cookie';
 import FullScreenLoader from '../components/FullScreenLoader';
 import React from 'react';
 import { GetMeQuery, useGetMeQuery } from '../generated/graphql';
-import { IUser } from '../context/types';
 import { gql } from 'graphql-request';
 import graphqlRequestClient from '../requests/graphqlRequestClient';
 import useStore from '../store';
+import { IUser } from '../lib/types';
 
 export const REFRESH_ACCESS_TOKEN = gql`
   query {

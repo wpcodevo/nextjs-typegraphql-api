@@ -6,6 +6,17 @@ const nextConfig = {
     config.experiments.topLevelAwait = true;
     return config;
   },
+  experimental: {
+    images: {
+      allowFutureImage: true,
+      remotePatterns: [
+        {
+          protocol: 'https',
+          hostname: '**.cloudinary.com',
+        },
+      ],
+    },
+  },
 };
 
 module.exports = nextConfig;
