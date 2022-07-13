@@ -1,58 +1,75 @@
-import { useCookies } from 'react-cookie';
-import FullScreenLoader from '../components/FullScreenLoader';
-import React from 'react';
-import { GetMeQuery, useGetMeQuery } from '../generated/graphql';
-import { IUser } from '../context/types';
-import { gql } from 'graphql-request';
-import graphqlRequestClient from '../requests/graphqlRequestClient';
+import React, { useEffect } from 'react';
+import {
+  useGetMeQuery,
+  useRefreshAccessTokenQuery,
+} from '../generated/graphql';
+import { IUser } from '../lib/types';
+import graphqlRequestClient, {
+  queryClient,
+} from '../requests/graphqlRequestClient';
 import useStore from '../store';
 
-export const REFRESH_ACCESS_TOKEN = gql`
-  query {
-    refreshAccessToken {
-      status
-      access_token
-    }
-  }
-`;
-
 type AuthMiddlewareProps = {
-  children: React.ReactElement;
+  children: React.ReactNode;
+  requireAuth?: boolean;
+  enableAuth?: boolean;
 };
 
-const AuthMiddleware: React.FC<AuthMiddlewareProps> = ({ children }) => {
-  const [cookies] = useCookies(['logged_in']);
+const AuthMiddleware: React.FC<AuthMiddlewareProps> = ({
+  children,
+  requireAuth,
+  enableAuth,
+}) => {
+  console.log('I was called from AuthMiddleware');
   const store = useStore();
-
-  const query = useGetMeQuery<GetMeQuery, Error>(
+  const query = useRefreshAccessTokenQuery(
     graphqlRequestClient,
     {},
     {
+      enabled: false,
       retry: 1,
-      enabled: Boolean(cookies.logged_in),
+      onError(error: any) {
+        store.setPageLoading(false);
+        document.location.href = '/login';
+      },
+      onSuccess(data: any) {
+        store.setPageLoading(false);
+        queryClient.refetchQueries('getMe');
+      },
+    }
+  );
+  const { isLoading, isFetching } = useGetMeQuery(
+    graphqlRequestClient,
+    {},
+    {
       onSuccess: (data) => {
+        store.setPageLoading(false);
         store.setAuthUser(data.getMe.user as IUser);
       },
+      retry: 1,
+      enabled: !!enableAuth,
       onError(error: any) {
-        error.response.errors.forEach(async (err: any) => {
-          if (err.message.includes('not logged in')) {
-            try {
-              await graphqlRequestClient.request(REFRESH_ACCESS_TOKEN);
-              query.refetch();
-            } catch (error) {
-              document.location.href = '/login';
-            }
+        store.setPageLoading(false);
+        error.response.errors.forEach((err: any) => {
+          if (err.message.includes('No access token found')) {
+            query.refetch({ throwOnError: true });
           }
         });
       },
     }
   );
 
-  if (query.isLoading) {
-    return <FullScreenLoader />;
-  }
+  const loading =
+    isLoading || isFetching || query.isLoading || query.isFetching;
 
-  return children;
+  useEffect(() => {
+    if (loading) {
+      store.setPageLoading(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
+
+  return <>{children}</>;
 };
 
 export default AuthMiddleware;

@@ -33,7 +33,7 @@ const registerSchema = object({
 
 export type RegisterInput = TypeOf<typeof registerSchema>;
 
-const Home: NextPage = () => {
+const RegisterPage: NextPage = () => {
   const router = useRouter();
   const { mutate: SignUpUser, isLoading } = useSignUpUserMutation<Error>(
     graphqlRequestClient,
@@ -126,4 +126,4 @@ export const getServerSideProps: GetServerSideProps = async () => {
   };
 };
 
-export default Home;
+export default RegisterPage;

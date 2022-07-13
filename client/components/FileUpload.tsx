@@ -3,6 +3,9 @@ import { Controller, useController, useFormContext } from 'react-hook-form';
 import useStore from '../store';
 import Spinner from './Spinner';
 
+const CLOUDINARY_UPLOAD_PRESET = 'nextjs-typegraphql';
+const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/Codevo/image/upload';
+
 type FileUpLoaderProps = {
   name: string;
 };
@@ -21,16 +24,13 @@ const FileUpLoader: React.FC<FileUpLoaderProps> = ({ name }) => {
       const newFile = Object.values(target.files).map((file: File) => file);
       const formData = new FormData();
       formData.append('file', newFile[0]);
-      formData.append('upload_preset', 'nextjs-typegraphql');
+      formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
 
       store.setUploadingImage(true);
-      const data = await fetch(
-        'https://api.cloudinary.com/v1_1/Codevo/image/upload',
-        {
-          method: 'POST',
-          body: formData,
-        }
-      )
+      const data = await fetch(CLOUDINARY_URL, {
+        method: 'POST',
+        body: formData,
+      })
         .then((res) => {
           store.setUploadingImage(false);
 

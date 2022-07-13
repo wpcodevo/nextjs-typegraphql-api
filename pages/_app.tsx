@@ -5,7 +5,7 @@ import { QueryClientProvider, Hydrate } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { CookiesProvider } from 'react-cookie';
 import { queryClient } from '../client/requests/graphqlRequestClient';
-import PageLayout from '../client/components/Layout';
+import AuthMiddleware from '../client/middleware/AuthMiddleware';
 import { ToastContainer } from 'react-toastify';
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -13,12 +13,12 @@ function MyApp({ Component, pageProps }: AppProps) {
     <CookiesProvider>
       <QueryClientProvider client={queryClient}>
         <Hydrate state={pageProps.dehydratedState}>
-          <PageLayout
+          <AuthMiddleware
             requireAuth={pageProps.requireAuth}
             enableAuth={pageProps.enableAuth}
           >
             <Component {...pageProps} />
-          </PageLayout>
+          </AuthMiddleware>
           <ToastContainer />
           <ReactQueryDevtools initialIsOpen={false} />
         </Hydrate>

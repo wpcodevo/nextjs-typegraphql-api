@@ -7,7 +7,6 @@ import {
   useGetMeQuery,
 } from '../client/generated/graphql';
 import { IUser } from '../client/lib/types';
-import { REFRESH_ACCESS_TOKEN } from '../client/middleware/AuthMiddleware';
 import { axiosGetMe } from '../client/requests/axiosClient';
 import graphqlRequestClient, {
   queryClient,
@@ -27,18 +26,6 @@ const ProfilePage: NextPage<ProfileProps> = ({}) => {
       retry: 1,
       onSuccess: (data) => {
         store.setAuthUser(data.getMe.user as IUser);
-      },
-      onError(error: any) {
-        error.response.errors.forEach(async (err: any) => {
-          if (err.message.includes('not logged in')) {
-            try {
-              await graphqlRequestClient.request(REFRESH_ACCESS_TOKEN);
-              query.refetch();
-            } catch (error) {
-              document.location.href = '/login';
-            }
-          }
-        });
       },
     }
   );
