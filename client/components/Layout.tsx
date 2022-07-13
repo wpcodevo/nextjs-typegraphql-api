@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { IUser } from '../context/types';
 import {
   useGetMeQuery,
   useRefreshAccessTokenQuery,
 } from '../generated/graphql';
+import { IUser } from '../lib/types';
 import graphqlRequestClient, {
   queryClient,
 } from '../requests/graphqlRequestClient';
