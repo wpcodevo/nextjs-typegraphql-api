@@ -7,3 +7,7 @@
 ### 2. GraphQL CRUD API with Next.js, MongoDB, and TypeGraphQL
 
 [GraphQL CRUD API with Next.js, MongoDB, and TypeGraphQL](https://codevoweb.com/graphql-crud-api-nextjs-mongodb-typegraphql)
+
+### 3. Next.js Full-Stack App with React Query, and GraphQL-CodeGen
+
+[Next.js Full-Stack App with React Query, and GraphQL-CodeGen](https://codevoweb.com/nextjs-full-stack-app-with-react-query-and-graphql-codegen)
