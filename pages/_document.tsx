@@ -6,7 +6,7 @@ export default function Document() {
   return (
     <Html>
       <Head />
-      <body className='font-Poppins'>
+      <body>
         <Main />
         <NextScript />
       </body>
