@@ -28,7 +28,7 @@ This article will teach you how to build a GraphQL API with Next.js to implement
 - Update the Apollo GraphQL Server
 - Testing the GraphQL CRUD API in Postman
 
-Read the entire article here: [(https://codevoweb.com/graphql-crud-api-nextjs-mongodb-typegraphql]((https://codevoweb.com/graphql-crud-api-nextjs-mongodb-typegraphql)
+Read the entire article here: [https://codevoweb.com/graphql-crud-api-nextjs-mongodb-typegraphql](https://codevoweb.com/graphql-crud-api-nextjs-mongodb-typegraphql)
 
 Articles in this series::
 
